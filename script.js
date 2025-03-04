@@ -6,7 +6,11 @@ document.getElementById("jobForm")?.addEventListener("submit", function(event) {
     const company = document.getElementById("company").value;
     const status = document.getElementById("status").value;
 
+    // Show confirmation alert
     alert(`Saved Job: ${jobTitle} at ${company} (Status: ${status})`);
+
+    // Redirect to the recruiter page after submission
+    window.location.href = "recruiter.html"; 
 });
 
 // Handle Recruiter Form Submission
@@ -18,6 +22,7 @@ document.getElementById("recruiterForm")?.addEventListener("submit", function(ev
     const phone = document.getElementById("phone").value;
 
     alert(`Saved Recruiter: ${recruiterName} (${email}, ${phone})`);
+     window.location.href = "resume.html"; 
 });
 
 // Handle Resume Upload
