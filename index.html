@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Tracker - Multi-Step Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        h2, h3 {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Job Application Tracker</h2>
+
+    <!-- Step 0: Login / Signup -->
+    <div id="auth">
+        <h3>Login</h3>
+        <form id="loginForm">
+            <label>Email:</label>
+            <input type="email" id="loginEmail" required><br><br>
+            <label>Password:</label>
+            <input type="password" id="loginPassword" required><br><br>
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="#" id="showSignup">Create an account</a></p>
+
+        <div id="signupSection" style="display: none;">
+            <h3>Create Account</h3>
+            <form id="signupForm">
+                <label>Email:</label>
+                <input type="email" id="signupEmail" required><br><br>
+                <label>Password:</label>
+                <input type="password" id="signupPassword" required><br><br>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Step 1: Job Application Details -->
+    <div id="step1" style="display: none;">
+        <h3>Job Details</h3>
+        <form id="jobForm">
+            <label>Job Title:</label>
+            <input type="text" id="jobTitle" required><br><br>
+
+            <label>Company:</label>
+            <input type="text" id="company" required><br><br>
+
+            <label>Status:</label>
+            <select id="status">
+                <option value="Applied">Applied</option>
+                <option value="Interview Scheduled">Interview Scheduled</option>
+                <option value="Offer Received">Offer Received</option>
+                <option value="Rejected">Rejected</option>
+            </select><br><br>
+
+            <button type="button" id="next1">Next</button>
+        </form>
+    </div>
+
+    <!-- Step 2: Recruiter Details -->
+    <div id="step2" style="display: none;">
+        <h3>Recruiter Details</h3>
+        <form id="recruiterForm">
+            <label>Recruiter Name:</label>
+            <input type="text" id="recruiterName" required><br><br>
+
+            <label>Email:</label>
+            <input type="email" id="email" required><br><br>
+
+            <label>Phone:</label>
+            <input type="tel" id="phone"><br><br>
+
+            <button type="button" id="prev1">Back</button>
+            <button type="button" id="next2">Next</button>
+        </form>
+    </div>
+
+    <!-- Step 3: Resume Upload -->
+    <div id="step3" style="display: none;">
+        <h3>Upload Resume</h3>
+        <form id="resumeForm">
+            <label>Resume Title:</label>
+            <input type="text" id="resumeTitle" required><br><br>
+
+            <label>Upload Resume:</label>
+            <input type="file" id="resumeFile" required><br><br>
+
+            <button type="button" id="prev2">Back</button>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Authentication
+            const loginForm = document.getElementById("loginForm");
+            const signupForm = document.getElementById("signupForm");
+            const showSignup = document.getElementById("showSignup");
+            const signupSection = document.getElementById("signupSection");
+
+            if (showSignup) {
+                showSignup.addEventListener("click", function () {
+                    signupSection.style.display = "block";
+                });
+            }
+
+            if (signupForm) {
+                signupForm.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    const email = document.getElementById("signupEmail").value;
+                    const password = document.getElementById("signupPassword").value;
+                    localStorage.setItem("userEmail", email);
+                    localStorage.setItem("userPassword", password);
+                    alert("Account created successfully! Now, log in.");
+                    window.location.reload();
+                });
+            }
+
+            if (loginForm) {
+                loginForm.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    const loginEmail = document.getElementById("loginEmail").value;
+                    const loginPassword = document.getElementById("loginPassword").value;
+                    const storedEmail = localStorage.getItem("userEmail");
+                    const storedPassword = localStorage.getItem("userPassword");
+
+                    if (loginEmail === storedEmail && loginPassword === storedPassword) {
+                        alert("Login successful!");
+                        document.getElementById("auth").style.display = "none";
+                        document.getElementById("step1").style.display = "block";
+                    } else {
+                        alert("Invalid credentials. Try again.");
+                    }
+                });
+            }
+
+            // Multi-step Form Navigation
+            const step1 = document.getElementById("step1");
+            const step2 = document.getElementById("step2");
+            const step3 = document.getElementById("step3");
+
+            document.getElementById("next1").addEventListener("click", function () {
+                step1.style.display = "none";
+                step2.style.display = "block";
+            });
+
+            document.getElementById("prev1").addEventListener("click", function () {
+                step2.style.display = "none";
+                step1.style.display = "block";
+            });
+
+            document.getElementById("next2").addEventListener("click", function () {
+                step2.style.display = "none";
+                step3.style.display = "block";
+            });
+
+            document.getElementById("prev2").addEventListener("click", function () {
+                step3.style.display = "none";
+                step2.style.display = "block";
+            });
+        });
+    </script>
+
+</body>
+</html>
